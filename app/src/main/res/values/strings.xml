@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FakeStoreXML</string>
+    <string name="error">Unknown error occurred</string>
+</resources>
