@@ -3,6 +3,7 @@ buildscript {
         dagger_hilt_version = '2.44.2'
         retrofit_version = '2.9.0'
         nav_version = '2.5.3'
+        glide_version = '4.14.2'
     }
 }
 plugins {

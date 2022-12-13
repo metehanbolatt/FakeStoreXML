@@ -18,7 +18,6 @@ class FakeStoreRepositoryImpl @Inject constructor(
     override suspend fun getAllProducts(): NetworkResponse<List<ProductItem>> =
         withContext(ioDispatcher) {
             try {
-                NetworkResponse.Loading
                 remoteDataSource.getAllProducts()
             } catch (e: Exception) {
                 NetworkResponse.Error(e)

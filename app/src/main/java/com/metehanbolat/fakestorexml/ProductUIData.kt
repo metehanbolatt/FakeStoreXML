@@ -1,6 +1,6 @@
 package com.metehanbolat.fakestorexml
 
-data class MainUIData(
+data class ProductUIData(
     val name: String,
     val imageUrl: String
 )

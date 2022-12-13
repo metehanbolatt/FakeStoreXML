@@ -1,6 +1,5 @@
 package com.metehanbolat.data.dto
 
-
 import com.google.gson.annotations.SerializedName
 
 data class ProductResponseItem(

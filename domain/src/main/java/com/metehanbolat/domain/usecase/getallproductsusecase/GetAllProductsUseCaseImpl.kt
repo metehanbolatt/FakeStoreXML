@@ -12,5 +12,8 @@ class GetAllProductsUseCaseImpl @Inject constructor(
 ) : GetAllProductsUseCase {
 
     override fun invoke(): Flow<NetworkResponse<List<ProductItem>>> =
-        flow { emit(fakeStoreRepository.getAllProducts()) }
+        flow {
+            emit(NetworkResponse.Loading)
+            emit(fakeStoreRepository.getAllProducts())
+        }
 }
