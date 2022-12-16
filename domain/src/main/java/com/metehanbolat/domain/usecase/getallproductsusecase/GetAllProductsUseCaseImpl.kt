@@ -16,4 +16,5 @@ class GetAllProductsUseCaseImpl @Inject constructor(
             emit(NetworkResponse.Loading)
             emit(fakeStoreRepository.getAllProducts())
         }
+
 }

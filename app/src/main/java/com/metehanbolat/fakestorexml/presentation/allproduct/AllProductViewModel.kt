@@ -12,6 +12,8 @@ import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,7 +32,10 @@ class AllProductViewModel @Inject constructor(
 
     private fun getAllProducts() {
         viewModelScope.launch {
-            getAllProductsUseCase().collect { response ->
+            getAllProductsUseCase()
+                .onStart { println("onStart") }
+                .onCompletion { println("onCompletion") }
+                .collect { response ->
                 when (response) {
                     NetworkResponse.Loading -> _mainUIState.postValue(MainUIState.Loading)
                     is NetworkResponse.Error -> _mainUIState.postValue(MainUIState.Error(R.string.error))
