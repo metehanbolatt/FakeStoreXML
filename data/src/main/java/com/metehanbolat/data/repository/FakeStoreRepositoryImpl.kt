@@ -24,4 +24,13 @@ class FakeStoreRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun getLimitedProducts(limit: String): NetworkResponse<List<ProductItem>> =
+        withContext(ioDispatcher) {
+            try {
+                remoteDataSource.getLimitedProducts(limit = limit)
+            } catch (e: Exception) {
+                NetworkResponse.Error(e)
+            }
+        }
+
 }

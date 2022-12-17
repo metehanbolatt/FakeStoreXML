@@ -8,6 +8,7 @@ import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.mapper.ProductListMapper
 import com.metehanbolat.domain.model.ProductItem
 import com.metehanbolat.domain.usecase.getallproductsusecase.GetAllProductsUseCase
+import com.metehanbolat.domain.usecase.getlimitedproductsusecase.GetLimitedProductsUseCase
 import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.R
@@ -20,8 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AllProductViewModel @Inject constructor(
     private val getAllProductsUseCase: GetAllProductsUseCase,
+    private val getLimitedProductsUseCase: GetLimitedProductsUseCase,
     private val productsMapper: ProductListMapper<ProductItem, ProductUIData>
-): ViewModel() {
+) : ViewModel() {
 
     private val _mainUIState = MutableLiveData<MainUIState>()
     val mainUIState: LiveData<MainUIState> = _mainUIState
@@ -36,16 +38,35 @@ class AllProductViewModel @Inject constructor(
                 .onStart { println("onStart") }
                 .onCompletion { println("onCompletion") }
                 .collect { response ->
-                when (response) {
-                    NetworkResponse.Loading -> _mainUIState.postValue(MainUIState.Loading)
-                    is NetworkResponse.Error -> _mainUIState.postValue(MainUIState.Error(R.string.error))
-                    is NetworkResponse.Success -> _mainUIState.postValue(
-                        MainUIState.Success(
-                            productsMapper.map(response.result)
+                    when (response) {
+                        NetworkResponse.Loading -> _mainUIState.postValue(MainUIState.Loading)
+                        is NetworkResponse.Error -> _mainUIState.postValue(MainUIState.Error(R.string.error))
+                        is NetworkResponse.Success -> _mainUIState.postValue(
+                            MainUIState.Success(
+                                productsMapper.map(response.result)
+                            )
                         )
-                    )
+                    }
                 }
-            }
+        }
+    }
+
+    private fun getLimitedProducts(limit: String) {
+        viewModelScope.launch {
+            getLimitedProductsUseCase.invoke(limit = limit)
+                .onStart { println("getLimitedProducts: onStart") }
+                .onCompletion { println("getLimitedProducts: onCompletion") }
+                .collect { response ->
+                    when (response) {
+                        NetworkResponse.Loading -> _mainUIState.postValue(MainUIState.Loading)
+                        is NetworkResponse.Error -> _mainUIState.postValue(MainUIState.Error(R.string.error))
+                        is NetworkResponse.Success -> _mainUIState.postValue(
+                            MainUIState.Success(
+                                productsMapper.map(response.result)
+                            )
+                        )
+                    }
+                }
         }
     }
 }

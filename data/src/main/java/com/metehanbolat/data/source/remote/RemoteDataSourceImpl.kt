@@ -17,4 +17,12 @@ class RemoteDataSourceImpl @Inject constructor(private val fakeStoreApi: FakeSto
             NetworkResponse.Error(e)
         }
 
+    override suspend fun getLimitedProducts(limit: String): NetworkResponse<List<ProductItem>> =
+        try {
+            val response = fakeStoreApi.getLimitedProducts(limit = limit).map { it.toProductItem() }
+            NetworkResponse.Success(response)
+        } catch (e: Exception) {
+            NetworkResponse.Error(e)
+        }
+
 }
