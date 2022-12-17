@@ -6,10 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.databinding.FragmentAllProductBinding
+import com.metehanbolat.fakestorexml.util.observeTextChanges
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 
+@FlowPreview
 @AndroidEntryPoint
 class AllProductFragment : Fragment() {
 
@@ -33,6 +38,11 @@ class AllProductFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        bindViewModel()
+        observeSearchTextChanges()
+    }
+
+    private fun bindViewModel() {
         viewModel.mainUIState.observe(viewLifecycleOwner) {
             when(it) {
                 is MainUIState.Loading -> println("Loading")
@@ -43,7 +53,19 @@ class AllProductFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun observeSearchTextChanges() {
+        binding.searchInput.observeTextChanges()
+            //.filter { it.isNotBlank() }
+            .debounce(300L)
+            .distinctUntilChanged()
+            .onEach { viewModel.getLimitedProducts(it) }
+            .launchIn(lifecycleScope)
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -51,7 +51,7 @@ class AllProductViewModel @Inject constructor(
         }
     }
 
-    private fun getLimitedProducts(limit: String) {
+    fun getLimitedProducts(limit: String) {
         viewModelScope.launch {
             getLimitedProductsUseCase.invoke(limit = limit)
                 .onStart { println("getLimitedProducts: onStart") }

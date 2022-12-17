@@ -2,4 +2,5 @@
     <string name="app_name">FakeStoreXML</string>
     <string name="error">Unknown error occurred</string>
     <string name="product_image">Product Image</string>
+    <string name="limited_product">Limited Product</string>
 </resources>
