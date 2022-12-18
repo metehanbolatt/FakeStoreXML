@@ -28,11 +28,7 @@ class AllProductViewModel @Inject constructor(
     private val _mainUIState = MutableLiveData<MainUIState>()
     val mainUIState: LiveData<MainUIState> = _mainUIState
 
-    init {
-        getAllProducts()
-    }
-
-    private fun getAllProducts() {
+    fun getAllProducts() {
         viewModelScope.launch {
             getAllProductsUseCase()
                 .onStart { println("onStart") }

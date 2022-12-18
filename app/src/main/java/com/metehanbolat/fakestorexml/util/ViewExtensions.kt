@@ -1,5 +1,6 @@
 package com.metehanbolat.fakestorexml.util
 
+import android.view.View
 import com.google.android.material.textfield.TextInputEditText
 import com.metehanbolat.fakestorexml.contract.AbstractTextWatcher
 import kotlinx.coroutines.channels.awaitClose
@@ -23,4 +24,12 @@ fun TextInputEditText.observeTextChanges(): Flow<String> {
     }.onStart {
         text?.let { emit(it.toString()) }
     }
+}
+
+fun View.visible() {
+    visibility = View.VISIBLE
+}
+
+fun View.gone() {
+    visibility = View.GONE
 }

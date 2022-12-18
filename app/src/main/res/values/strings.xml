@@ -3,4 +3,6 @@
     <string name="error">Unknown error occurred</string>
     <string name="product_image">Product Image</string>
     <string name="limited_product">Limited Product</string>
+    <string name="service_error_text">Service Error</string>
+    <string name="no_internet_text">Could NOT connect to Internet!</string>
 </resources>
