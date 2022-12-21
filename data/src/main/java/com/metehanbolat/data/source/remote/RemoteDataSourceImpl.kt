@@ -6,8 +6,9 @@ import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.model.ProductItem
 import javax.inject.Inject
 
-class RemoteDataSourceImpl @Inject constructor(private val fakeStoreApi: FakeStoreApi) :
-    RemoteDataSource {
+class RemoteDataSourceImpl @Inject constructor(
+    private val fakeStoreApi: FakeStoreApi
+) : RemoteDataSource {
 
     override suspend fun getAllProducts(): NetworkResponse<List<ProductItem>> =
         try {

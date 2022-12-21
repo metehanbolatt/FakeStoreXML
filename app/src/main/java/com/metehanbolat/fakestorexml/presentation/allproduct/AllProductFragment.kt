@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.metehanbolat.domain.model.ProductDbModel
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.R
 import com.metehanbolat.fakestorexml.connectivity.ConnectivityObserver
@@ -50,6 +51,30 @@ class AllProductFragment : Fragment() {
 
         bindViewModel()
         bindUI()
+
+        binding.roomTestButton.setOnLongClickListener {
+            viewModel.readAllProductFromDatabase()
+            true
+        }
+
+        binding.roomTestButton.setOnClickListener {
+            viewModel.addProductsToDatabase(
+                ProductDbModel(
+                    id = 99,
+                    productName = "Skirt",
+                    productImageUrl = "Dummy Url"
+                )
+            )
+        }
+
+        viewModel.productListFromDatabase.observe(viewLifecycleOwner) {
+            println("Observe productListFromDatabase: $it")
+        }
+
+        viewModel.productDbModel.observe(viewLifecycleOwner) {
+            println("Observe productDbModel: $it")
+        }
+
     }
 
     private fun bindViewModel() {

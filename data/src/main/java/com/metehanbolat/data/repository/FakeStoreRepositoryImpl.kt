@@ -1,8 +1,11 @@
 package com.metehanbolat.data.repository
 
+import androidx.lifecycle.LiveData
 import com.metehanbolat.data.di.coroutine.IoDispatcher
+import com.metehanbolat.data.source.local.LocalDataSource
 import com.metehanbolat.data.source.remote.RemoteDataSource
 import com.metehanbolat.domain.common.NetworkResponse
+import com.metehanbolat.domain.model.ProductDbModel
 import com.metehanbolat.domain.model.ProductItem
 import com.metehanbolat.domain.repository.FakeStoreRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -12,6 +15,7 @@ import javax.inject.Inject
 
 class FakeStoreRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : FakeStoreRepository {
 
@@ -33,4 +37,10 @@ class FakeStoreRepositoryImpl @Inject constructor(
             }
         }
 
+    override val readAllData: LiveData<List<ProductDbModel>>
+        get() = localDataSource.readAllData
+
+    override suspend fun addProduct(product: ProductDbModel) {
+        localDataSource.addProduct(product = product)
+    }
 }
