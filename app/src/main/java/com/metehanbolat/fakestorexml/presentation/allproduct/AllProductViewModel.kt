@@ -9,8 +9,8 @@ import com.metehanbolat.domain.usecase.addproducttodatabaseusecase.AddProductToD
 import com.metehanbolat.domain.usecase.getallproductsusecase.GetAllProductsUseCase
 import com.metehanbolat.domain.usecase.getlimitedproductsusecase.GetLimitedProductsUseCase
 import com.metehanbolat.domain.usecase.readallproductfromdatabaseusecase.ReadAllProductFromDatabaseUseCase
-import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.MainUIState
+import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.onCompletion
@@ -36,7 +36,8 @@ class AllProductViewModel @Inject constructor(
     private val _productDbModel = MutableLiveData<ProductDbModel>()
     val productDbModel: LiveData<ProductDbModel> = _productDbModel
 
-    val allProductFromDatabase = readAllProductFromDatabaseUseCase().asLiveData(viewModelScope.coroutineContext)
+    val allProductFromDatabase =
+        readAllProductFromDatabaseUseCase().asLiveData(viewModelScope.coroutineContext)
 
     fun getAllProducts() {
         viewModelScope.launch {

@@ -22,6 +22,7 @@ import com.metehanbolat.fakestorexml.util.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlin.random.Random
 
 @FlowPreview
 @AndroidEntryPoint
@@ -53,7 +54,7 @@ class AllProductFragment : Fragment() {
         bindUI()
 
         binding.roomTestButton.setOnLongClickListener {
-            println("Room: " + viewModel.allProductFromDatabase.value)
+            viewModel.readAllProductFromDatabase()
             true
         }
         viewModel.allProductFromDatabase.observe(viewLifecycleOwner) {
@@ -63,7 +64,7 @@ class AllProductFragment : Fragment() {
         binding.roomTestButton.setOnClickListener {
             viewModel.addProductsToDatabase(
                 ProductDbModel(
-                    id = 99,
+                    id = Random.nextInt(),
                     productName = "Skirt",
                     productImageUrl = "Dummy Url"
                 )
