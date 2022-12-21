@@ -40,7 +40,12 @@ class FakeStoreRepositoryImpl @Inject constructor(
     override val readAllData: Flow<List<ProductDbModel>>
         get() = localDataSource.readAllData
 
-    override suspend fun addProduct(product: ProductDbModel) {
-        localDataSource.addProduct(product = product)
+    override suspend fun addProduct(product: ProductDbModel) =
+        withContext(ioDispatcher) {
+            try {
+                localDataSource.addProduct(product = product)
+            } catch (e: Exception) {
+                println("FakeStoreRepositoryImpl addProduct Function Exception: ${e.localizedMessage}")
+            }
     }
 }

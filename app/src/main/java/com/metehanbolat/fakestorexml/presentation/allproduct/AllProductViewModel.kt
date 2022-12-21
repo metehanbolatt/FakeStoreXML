@@ -13,7 +13,6 @@ import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.R
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -78,15 +77,8 @@ class AllProductViewModel @Inject constructor(
     }
 
     fun addProductsToDatabase(product: ProductDbModel) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             addProductToDatabaseUseCase(product = product)
-                .onStart { println("addProductsToDatabase: onStart") }
-                .onCompletion { println("addProductsToDatabase: onCompletion") }
-                .collect { response ->
-                    println("addProductsToDatabase Product: $product")
-                    println("addProductsToDatabase Response: $response")
-                    _productDbModel.postValue(response)
-                }
         }
     }
 
