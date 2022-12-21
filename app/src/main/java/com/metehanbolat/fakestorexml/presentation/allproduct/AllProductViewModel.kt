@@ -13,6 +13,7 @@ import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -36,7 +37,7 @@ class AllProductViewModel @Inject constructor(
     private val _productDbModel = MutableLiveData<ProductDbModel>()
     val productDbModel: LiveData<ProductDbModel> = _productDbModel
 
-    val allProductFromDatabase = readAllProductFromDatabaseUseCase().asLiveData()
+    val allProductFromDatabase = readAllProductFromDatabaseUseCase().asLiveData(viewModelScope.coroutineContext)
 
     fun getAllProducts() {
         viewModelScope.launch {
@@ -77,7 +78,7 @@ class AllProductViewModel @Inject constructor(
     }
 
     fun addProductsToDatabase(product: ProductDbModel) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             addProductToDatabaseUseCase(product = product)
                 .onStart { println("addProductsToDatabase: onStart") }
                 .onCompletion { println("addProductsToDatabase: onCompletion") }

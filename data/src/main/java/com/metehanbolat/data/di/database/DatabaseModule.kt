@@ -1,15 +1,14 @@
 package com.metehanbolat.data.di.database
 
-import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.metehanbolat.data.database.ProductDatabase
 import com.metehanbolat.data.database.dao.ProductDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Module
@@ -19,25 +18,16 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(
-        appContext: Application,
-        callback: ProductDatabase.Callback
+        @ApplicationContext context: Context
     ): ProductDatabase =
         Room.databaseBuilder(
-            appContext,
+            context,
             ProductDatabase::class.java,
             "product_database"
-        )
-            .allowMainThreadQueries()
-            .fallbackToDestructiveMigration()
-            .addCallback(callback)
-            .build()
+        ).build()
 
     @Provides
     @Singleton
     fun provideProductDao(database: ProductDatabase): ProductDao = database.productDao()
 
-    @ApplicationScope
-    @Provides
-    @Singleton
-    fun provideApplicationScope(): CoroutineScope = CoroutineScope(SupervisorJob())
 }
