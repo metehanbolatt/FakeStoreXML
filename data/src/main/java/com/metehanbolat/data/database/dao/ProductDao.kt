@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addProduct(product: ProductDbModel)
+    suspend fun addProduct(product: ProductDbModel)
 
     @Query("SELECT * FROM product_table ORDER BY id ASC")
     fun readAllData(): Flow<List<ProductDbModel>>
