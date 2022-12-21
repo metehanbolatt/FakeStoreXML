@@ -14,7 +14,6 @@ fun TextInputEditText.observeTextChanges(): Flow<String> {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 super.onTextChanged(s, start, before, count)
                 trySend(s.toString())
-                println("text watcher: ${s.toString()}")
             }
         }
         addTextChangedListener(textWatcher)

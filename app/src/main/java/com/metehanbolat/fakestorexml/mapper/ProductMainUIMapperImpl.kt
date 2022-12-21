@@ -5,7 +5,8 @@ import com.metehanbolat.domain.model.ProductItem
 import com.metehanbolat.fakestorexml.ProductUIData
 import javax.inject.Inject
 
-class ProductMainUIMapperImpl @Inject constructor() : ProductListMapper<ProductItem, ProductUIData> {
+class ProductMainUIMapperImpl @Inject constructor() :
+    ProductListMapper<ProductItem, ProductUIData> {
     override fun map(input: List<ProductItem>?): List<ProductUIData> {
         return input?.map {
             ProductUIData(

@@ -31,8 +31,8 @@ class AllProductViewModel @Inject constructor(
     fun getAllProducts() {
         viewModelScope.launch {
             getAllProductsUseCase()
-                .onStart { println("onStart") }
-                .onCompletion { println("onCompletion") }
+                .onStart { println("getAllProducts: onStart") }
+                .onCompletion { println("getAllProducts: onCompletion") }
                 .collect { response ->
                     when (response) {
                         NetworkResponse.Loading -> _mainUIState.postValue(MainUIState.Loading)
