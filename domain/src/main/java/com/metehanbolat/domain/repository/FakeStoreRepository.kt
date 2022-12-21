@@ -1,9 +1,9 @@
 package com.metehanbolat.domain.repository
 
-import androidx.lifecycle.LiveData
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.model.ProductDbModel
 import com.metehanbolat.domain.model.ProductItem
+import kotlinx.coroutines.flow.Flow
 
 interface FakeStoreRepository {
 
@@ -12,7 +12,7 @@ interface FakeStoreRepository {
     suspend fun getLimitedProducts(limit: String): NetworkResponse<List<ProductItem>>
 
     /** Room Database */
-    val readAllData: LiveData<List<ProductDbModel>>
+    val readAllData: Flow<List<ProductDbModel>>
     suspend fun addProduct(product: ProductDbModel)
 
 }

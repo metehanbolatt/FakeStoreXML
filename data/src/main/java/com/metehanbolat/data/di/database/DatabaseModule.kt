@@ -21,7 +21,7 @@ object DatabaseModule {
     fun provideDatabase(
         appContext: Application,
         callback: ProductDatabase.Callback
-    ) =
+    ): ProductDatabase =
         Room.databaseBuilder(
             appContext,
             ProductDatabase::class.java,
@@ -39,5 +39,5 @@ object DatabaseModule {
     @ApplicationScope
     @Provides
     @Singleton
-    fun provideApplicationScope() = CoroutineScope(SupervisorJob())
+    fun provideApplicationScope(): CoroutineScope = CoroutineScope(SupervisorJob())
 }

@@ -1,9 +1,6 @@
 package com.metehanbolat.fakestorexml.presentation.allproduct
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.mapper.ProductListMapper
 import com.metehanbolat.domain.model.ProductDbModel
@@ -38,6 +35,8 @@ class AllProductViewModel @Inject constructor(
 
     private val _productDbModel = MutableLiveData<ProductDbModel>()
     val productDbModel: LiveData<ProductDbModel> = _productDbModel
+
+    val allProductFromDatabase = readAllProductFromDatabaseUseCase().asLiveData()
 
     fun getAllProducts() {
         viewModelScope.launch {

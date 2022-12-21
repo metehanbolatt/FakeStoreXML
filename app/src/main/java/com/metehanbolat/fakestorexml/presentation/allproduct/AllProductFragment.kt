@@ -52,9 +52,8 @@ class AllProductFragment : Fragment() {
         bindViewModel()
         bindUI()
 
-        binding.roomTestButton.setOnLongClickListener {
-            viewModel.readAllProductFromDatabase()
-            true
+        viewModel.allProductFromDatabase.observe(viewLifecycleOwner) {
+            println("allProductFromDatabase: $it")
         }
 
         binding.roomTestButton.setOnClickListener {
