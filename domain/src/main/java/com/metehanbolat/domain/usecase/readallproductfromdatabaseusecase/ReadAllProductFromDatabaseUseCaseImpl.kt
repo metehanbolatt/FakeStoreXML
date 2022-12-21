@@ -10,5 +10,5 @@ class ReadAllProductFromDatabaseUseCaseImpl @Inject constructor(
     private val fakeStoreRepository: FakeStoreRepository
 ) : ReadAllProductFromDatabaseUseCase {
 
-    override fun invoke(): Flow<List<ProductDbModel>> = flow { fakeStoreRepository.readAllData }
+    override fun invoke(): Flow<List<ProductDbModel>> = flow { fakeStoreRepository.readAllData() }
 }

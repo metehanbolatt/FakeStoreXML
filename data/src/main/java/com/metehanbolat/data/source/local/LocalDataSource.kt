@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalDataSource {
 
-    val readAllData: Flow<List<ProductDbModel>>
+    fun readAllData(): Flow<List<ProductDbModel>>
     suspend fun addProduct(product: ProductDbModel)
 }

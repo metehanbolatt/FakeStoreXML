@@ -9,8 +9,7 @@ class LocalDataSourceImpl @Inject constructor(
     private val dao: ProductDao
 ) : LocalDataSource {
 
-    override val readAllData: Flow<List<ProductDbModel>>
-        get() = dao.readAllData()
+    override fun readAllData(): Flow<List<ProductDbModel>> = dao.readAllData()
 
     override suspend fun addProduct(product: ProductDbModel) {
         dao.addProduct(product)

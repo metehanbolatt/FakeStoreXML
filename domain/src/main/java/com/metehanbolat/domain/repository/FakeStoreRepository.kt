@@ -12,7 +12,7 @@ interface FakeStoreRepository {
     suspend fun getLimitedProducts(limit: String): NetworkResponse<List<ProductItem>>
 
     /** Room Database */
-    val readAllData: Flow<List<ProductDbModel>>
+    fun readAllData(): Flow<List<ProductDbModel>>
     suspend fun addProduct(product: ProductDbModel)
 
 }

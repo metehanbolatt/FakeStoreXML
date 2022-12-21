@@ -37,8 +37,7 @@ class FakeStoreRepositoryImpl @Inject constructor(
             }
         }
 
-    override val readAllData: Flow<List<ProductDbModel>>
-        get() = localDataSource.readAllData
+    override fun readAllData(): Flow<List<ProductDbModel>> = localDataSource.readAllData()
 
     override suspend fun addProduct(product: ProductDbModel) =
         withContext(ioDispatcher) {
