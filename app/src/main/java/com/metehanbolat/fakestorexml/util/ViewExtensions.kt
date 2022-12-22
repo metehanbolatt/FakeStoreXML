@@ -6,6 +6,7 @@ import com.metehanbolat.fakestorexml.contract.AbstractTextWatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onStart
 
 fun TextInputEditText.observeTextChanges(): Flow<String> {
@@ -22,7 +23,7 @@ fun TextInputEditText.observeTextChanges(): Flow<String> {
         }
     }.onStart {
         text?.let { emit(it.toString()) }
-    }
+    }.distinctUntilChanged()
 }
 
 fun View.visible() {

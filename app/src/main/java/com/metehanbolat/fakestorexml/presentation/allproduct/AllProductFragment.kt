@@ -122,7 +122,6 @@ class AllProductFragment : Fragment() {
     private fun observeSearchTextChanges() {
         binding.searchInput.observeTextChanges()
             .debounce(300L)
-            .distinctUntilChanged()
             .onEach {
                 if (it.isBlank()) {
                     viewModel.getAllProducts()
