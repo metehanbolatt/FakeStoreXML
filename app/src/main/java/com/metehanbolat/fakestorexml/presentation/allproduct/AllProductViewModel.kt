@@ -33,12 +33,6 @@ class AllProductViewModel @Inject constructor(
     private val _productListFromDatabase = MutableLiveData<List<ProductDbModel>>()
     val productListFromDatabase: LiveData<List<ProductDbModel>> = _productListFromDatabase
 
-    private val _productDbModel = MutableLiveData<ProductDbModel>()
-    val productDbModel: LiveData<ProductDbModel> = _productDbModel
-
-    val allProductFromDatabase =
-        readAllProductFromDatabaseUseCase().asLiveData(viewModelScope.coroutineContext)
-
     fun getAllProducts() {
         viewModelScope.launch {
             getAllProductsUseCase()
@@ -48,11 +42,22 @@ class AllProductViewModel @Inject constructor(
                     when (response) {
                         NetworkResponse.Loading -> _mainUIState.postValue(MainUIState.Loading)
                         is NetworkResponse.Error -> _mainUIState.postValue(MainUIState.Error(R.string.error))
-                        is NetworkResponse.Success -> _mainUIState.postValue(
-                            MainUIState.Success(
-                                productsMapper.map(response.result)
+                        is NetworkResponse.Success -> {
+                            response.result?.forEach {
+                                addProductsToDatabase(
+                                    ProductDbModel(
+                                        id = 0,
+                                        productName = it.title.toString(),
+                                        productImageUrl = it.image.toString()
+                                    )
+                                )
+                            }
+                            _mainUIState.postValue(
+                                MainUIState.Success(
+                                    productsMapper.map(response.result)
+                                )
                             )
-                        )
+                        }
                     }
                 }
         }

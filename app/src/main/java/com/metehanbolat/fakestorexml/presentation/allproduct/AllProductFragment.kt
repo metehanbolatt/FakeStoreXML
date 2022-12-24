@@ -57,9 +57,6 @@ class AllProductFragment : Fragment() {
             viewModel.readAllProductFromDatabase()
             true
         }
-        viewModel.allProductFromDatabase.observe(viewLifecycleOwner) {
-            println("allProductFromDatabase: $it")
-        }
 
         binding.roomTestButton.setOnClickListener {
             viewModel.addProductsToDatabase(
@@ -73,10 +70,6 @@ class AllProductFragment : Fragment() {
 
         viewModel.productListFromDatabase.observe(viewLifecycleOwner) {
             println("Observe productListFromDatabase: $it")
-        }
-
-        viewModel.productDbModel.observe(viewLifecycleOwner) {
-            println("Observe productDbModel: $it")
         }
 
     }
