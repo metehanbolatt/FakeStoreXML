@@ -1,6 +1,7 @@
 package com.metehanbolat.data.repository
 
 import com.metehanbolat.data.di.coroutine.IoDispatcher
+import com.metehanbolat.data.di.coroutine.MainDispatcher
 import com.metehanbolat.data.source.local.LocalDataSource
 import com.metehanbolat.data.source.remote.RemoteDataSource
 import com.metehanbolat.domain.common.NetworkResponse
@@ -8,7 +9,6 @@ import com.metehanbolat.domain.model.ProductDbModel
 import com.metehanbolat.domain.model.ProductItem
 import com.metehanbolat.domain.repository.FakeStoreRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -16,7 +16,8 @@ import javax.inject.Inject
 class FakeStoreRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : FakeStoreRepository {
 
     override suspend fun getAllProducts(): NetworkResponse<List<ProductItem>> =
