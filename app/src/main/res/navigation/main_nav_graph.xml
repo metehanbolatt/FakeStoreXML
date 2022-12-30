@@ -9,5 +9,18 @@
         android:id="@+id/allProductFragment"
         android:name="com.metehanbolat.fakestorexml.presentation.allproduct.AllProductFragment"
         android:label="fragment_all_product"
-        tools:layout="@layout/fragment_all_product" />
+        tools:layout="@layout/fragment_all_product">
+        <action
+            android:id="@+id/action_allProductFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.metehanbolat.fakestorexml.presentation.productdetail.ProductDetailFragment"
+        android:label="ProductDetailFragment"
+        tools:layout="@layout/fragment_product_detail" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
 </navigation>

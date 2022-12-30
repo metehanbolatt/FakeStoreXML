@@ -27,11 +27,11 @@ class AllProductViewModel @Inject constructor(
     private val productsMapper: ProductListMapper<ProductItem, ProductUIData>
 ) : ViewModel() {
 
-    private val _mainUIState = MutableLiveData<MainUIState>()
-    val mainUIState: LiveData<MainUIState> = _mainUIState
+    private val _productUIDataState = MutableLiveData<MainUIState<List<ProductUIData>>>()
+    val productUIDataState: LiveData<MainUIState<List<ProductUIData>>> get() = _productUIDataState
 
     private val _productListFromDatabase = MutableLiveData<List<ProductDbModel>>()
-    val productListFromDatabase: LiveData<List<ProductDbModel>> = _productListFromDatabase
+    val productListFromDatabase: LiveData<List<ProductDbModel>> get() = _productListFromDatabase
 
     fun getAllProducts() {
         viewModelScope.launch {
@@ -40,10 +40,10 @@ class AllProductViewModel @Inject constructor(
                 .onCompletion { println("getAllProducts: onCompletion") }
                 .collect { response ->
                     when (response) {
-                        NetworkResponse.Loading -> _mainUIState.postValue(MainUIState.Loading)
-                        is NetworkResponse.Error -> _mainUIState.postValue(MainUIState.Error(R.string.error))
+                        NetworkResponse.Loading -> _productUIDataState.postValue(MainUIState.Loading)
+                        is NetworkResponse.Error -> _productUIDataState.postValue(MainUIState.Error(R.string.error))
                         is NetworkResponse.Success -> {
-                            response.result?.forEach {
+                            response.result.forEach {
                                 addProductsToDatabase(
                                     ProductDbModel(
                                         id = 0,
@@ -52,7 +52,7 @@ class AllProductViewModel @Inject constructor(
                                     )
                                 )
                             }
-                            _mainUIState.postValue(
+                            _productUIDataState.postValue(
                                 MainUIState.Success(
                                     productsMapper.map(response.result)
                                 )
@@ -70,9 +70,9 @@ class AllProductViewModel @Inject constructor(
                 .onCompletion { println("getLimitedProducts: onCompletion") }
                 .collect { response ->
                     when (response) {
-                        NetworkResponse.Loading -> _mainUIState.postValue(MainUIState.Loading)
-                        is NetworkResponse.Error -> _mainUIState.postValue(MainUIState.Error(R.string.error))
-                        is NetworkResponse.Success -> _mainUIState.postValue(
+                        NetworkResponse.Loading -> _productUIDataState.postValue(MainUIState.Loading)
+                        is NetworkResponse.Error -> _productUIDataState.postValue(MainUIState.Error(R.string.error))
+                        is NetworkResponse.Success -> _productUIDataState.postValue(
                             MainUIState.Success(
                                 productsMapper.map(response.result)
                             )

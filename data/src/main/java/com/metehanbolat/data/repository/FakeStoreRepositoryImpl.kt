@@ -25,7 +25,7 @@ class FakeStoreRepositoryImpl @Inject constructor(
             try {
                 remoteDataSource.getAllProducts()
             } catch (e: Exception) {
-                NetworkResponse.Error(e)
+                NetworkResponse.Error(exception = e)
             }
         }
 
@@ -34,9 +34,19 @@ class FakeStoreRepositoryImpl @Inject constructor(
             try {
                 remoteDataSource.getLimitedProducts(limit = limit)
             } catch (e: Exception) {
-                NetworkResponse.Error(e)
+                NetworkResponse.Error(exception = e)
             }
         }
+
+    override suspend fun getProductFromId(id: String): NetworkResponse<ProductItem> =
+        withContext(ioDispatcher) {
+            try {
+                remoteDataSource.getProductFromId(id = id)
+            } catch (e: Exception) {
+                NetworkResponse.Error(exception = e)
+            }
+        }
+
 
     override fun readAllData(): Flow<List<ProductDbModel>> = localDataSource.readAllData()
 
@@ -47,5 +57,5 @@ class FakeStoreRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 println("FakeStoreRepositoryImpl addProduct Function Exception: ${e.localizedMessage}")
             }
-    }
+        }
 }

@@ -75,7 +75,7 @@ class AllProductFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.mainUIState.observe(viewLifecycleOwner) {
+        viewModel.productUIDataState.observe(viewLifecycleOwner) {
             if (isNetworkAvailable) {
                 when(it) {
                     is MainUIState.Loading -> {

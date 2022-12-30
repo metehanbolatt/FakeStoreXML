@@ -10,6 +10,7 @@ interface FakeStoreRepository {
     /** Api */
     suspend fun getAllProducts(): NetworkResponse<List<ProductItem>>
     suspend fun getLimitedProducts(limit: String): NetworkResponse<List<ProductItem>>
+    suspend fun getProductFromId(id: String): NetworkResponse<ProductItem>
 
     /** Room Database */
     fun readAllData(): Flow<List<ProductDbModel>>

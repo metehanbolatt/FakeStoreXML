@@ -6,6 +6,8 @@ import com.metehanbolat.domain.usecase.getallproductsusecase.GetAllProductsUseCa
 import com.metehanbolat.domain.usecase.getallproductsusecase.GetAllProductsUseCaseImpl
 import com.metehanbolat.domain.usecase.getlimitedproductsusecase.GetLimitedProductsUseCase
 import com.metehanbolat.domain.usecase.getlimitedproductsusecase.GetLimitedProductsUseCaseImpl
+import com.metehanbolat.domain.usecase.getproductfromid.GetProductFromIdUseCase
+import com.metehanbolat.domain.usecase.getproductfromid.GetProductFromIdUseCaseImpl
 import com.metehanbolat.domain.usecase.readallproductfromdatabaseusecase.ReadAllProductFromDatabaseUseCase
 import com.metehanbolat.domain.usecase.readallproductfromdatabaseusecase.ReadAllProductFromDatabaseUseCaseImpl
 import dagger.Binds
@@ -28,9 +30,14 @@ abstract class UseCaseModule {
 
     @Binds
     @ViewModelScoped
+    abstract fun bindGetProductFromIdUseCase(getProductFromIdUseCaseImpl: GetProductFromIdUseCaseImpl): GetProductFromIdUseCase
+
+    @Binds
+    @ViewModelScoped
     abstract fun bindReadAllProductFromDatabaseUseCase(readAllProductFromDatabaseUseCaseImpl: ReadAllProductFromDatabaseUseCaseImpl): ReadAllProductFromDatabaseUseCase
 
     @Binds
     @ViewModelScoped
     abstract fun bindAddProductToDatabaseUseCase(addProductToDatabaseUseCaseImpl: AddProductToDatabaseUseCaseImpl): AddProductToDatabaseUseCase
+
 }
