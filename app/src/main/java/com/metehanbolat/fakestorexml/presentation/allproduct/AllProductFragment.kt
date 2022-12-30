@@ -1,15 +1,15 @@
 package com.metehanbolat.fakestorexml.presentation.allproduct
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.metehanbolat.domain.model.ProductDbModel
+import androidx.navigation.fragment.findNavController
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.R
 import com.metehanbolat.fakestorexml.connectivity.ConnectivityObserver
@@ -21,8 +21,9 @@ import com.metehanbolat.fakestorexml.util.observeTextChanges
 import com.metehanbolat.fakestorexml.util.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
-import kotlin.random.Random
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @FlowPreview
 @AndroidEntryPoint
@@ -59,6 +60,7 @@ class AllProductFragment : Fragment() {
         }
 
         binding.roomTestButton.setOnClickListener {
+            /*
             viewModel.addProductsToDatabase(
                 ProductDbModel(
                     id = Random.nextInt(),
@@ -66,6 +68,8 @@ class AllProductFragment : Fragment() {
                     productImageUrl = "Dummy Url"
                 )
             )
+
+             */
         }
 
         viewModel.productListFromDatabase.observe(viewLifecycleOwner) {
@@ -77,7 +81,7 @@ class AllProductFragment : Fragment() {
     private fun bindViewModel() {
         viewModel.productUIDataState.observe(viewLifecycleOwner) {
             if (isNetworkAvailable) {
-                when(it) {
+                when (it) {
                     is MainUIState.Loading -> {
                         contentVisible(isContentVisible = false)
                     }
@@ -86,7 +90,13 @@ class AllProductFragment : Fragment() {
                     }
                     is MainUIState.Success -> {
                         contentVisible(isContentVisible = true)
-                        allProductAdapter = AllProductAdapter(it.data)
+                        allProductAdapter = AllProductAdapter(it.data) { id ->
+                            val action =
+                                AllProductFragmentDirections.actionAllProductFragmentToProductDetailFragment(
+                                    id = id
+                                )
+                            findNavController().navigate(action)
+                        }
                         binding.recyclerView.adapter = allProductAdapter
                     }
                 }

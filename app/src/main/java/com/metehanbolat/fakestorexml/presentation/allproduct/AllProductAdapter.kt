@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.databinding.AllProductItemBinding
 
-class AllProductAdapter(private val productList: List<ProductUIData>): RecyclerView.Adapter<AllProductAdapter.AllProductViewHolder>() {
+class AllProductAdapter(private val productList: List<ProductUIData>, private val cardClickListener: (String) -> Unit): RecyclerView.Adapter<AllProductAdapter.AllProductViewHolder>() {
     class AllProductViewHolder(val binding: AllProductItemBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllProductViewHolder {
@@ -20,6 +20,9 @@ class AllProductAdapter(private val productList: List<ProductUIData>): RecyclerV
         holder.binding.apply {
             itemName.text = item.name
             Glide.with(this.itemImage).load(item.imageUrl).into(this.itemImage)
+            root.setOnClickListener {
+                cardClickListener.invoke(item.id)
+            }
         }
     }
 
