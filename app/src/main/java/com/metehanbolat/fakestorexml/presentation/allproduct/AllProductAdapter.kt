@@ -1,32 +1,54 @@
 package com.metehanbolat.fakestorexml.presentation.allproduct
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.databinding.AllProductItemBinding
+import com.metehanbolat.fakestorexml.util.adapterViewBinding
+import com.metehanbolat.fakestorexml.util.loadImage
 
-class AllProductAdapter(private val productList: List<ProductUIData>, private val cardClickListener: (String) -> Unit): RecyclerView.Adapter<AllProductAdapter.AllProductViewHolder>() {
-    class AllProductViewHolder(val binding: AllProductItemBinding): RecyclerView.ViewHolder(binding.root)
+class AllProductAdapter :
+    RecyclerView.Adapter<AllProductAdapter.AllProductViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllProductViewHolder {
-        val binding = AllProductItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AllProductViewHolder(binding)
-    }
+    private val items = mutableListOf<ProductUIData>()
+    private var onItemClickListener: ((String) -> Unit)? = null
 
-    override fun onBindViewHolder(holder: AllProductViewHolder, position: Int) {
-        val item = productList[position]
-        holder.binding.apply {
-            itemName.text = item.name
-            Glide.with(this.itemImage).load(item.imageUrl).into(this.itemImage)
-            root.setOnClickListener {
-                cardClickListener.invoke(item.id)
-            }
+    class AllProductViewHolder(
+        val binding: AllProductItemBinding,
+        onItemClickListener: ((String) -> Unit)?
+    ) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.root.setOnClickListener { onItemClickListener?.invoke(adapterPosition.toString()) }
         }
     }
 
-    override fun getItemCount() = productList.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllProductViewHolder {
+        return AllProductViewHolder(
+            parent.adapterViewBinding(AllProductItemBinding::inflate),
+            onItemClickListener
+        )
+    }
 
+    override fun onBindViewHolder(holder: AllProductViewHolder, position: Int) {
+        val item = items[position]
+        holder.binding.apply {
+            itemName.text = item.name
+            itemImage.loadImage(item.imageUrl)
+        }
+    }
+
+    override fun getItemCount() = items.size
+
+    fun setOnItemClickListener(onItemClickListener: ((String) -> Unit)?) {
+        this.onItemClickListener = onItemClickListener
+    }
+
+    fun updateProductAdapter(newProducts: List<ProductUIData>) {
+        items.apply {
+            clear()
+            addAll(newProducts)
+        }
+        notifyItemRangeChanged(0, items.size)
+    }
 
 }
