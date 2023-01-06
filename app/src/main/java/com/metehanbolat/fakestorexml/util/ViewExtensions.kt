@@ -1,6 +1,8 @@
 package com.metehanbolat.fakestorexml.util
 
 import android.view.View
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
 import com.metehanbolat.fakestorexml.contract.AbstractTextWatcher
 import kotlinx.coroutines.channels.awaitClose
@@ -24,6 +26,10 @@ fun TextInputEditText.observeTextChanges(): Flow<String> {
     }.onStart {
         text?.let { emit(it.toString()) }
     }.distinctUntilChanged()
+}
+
+fun ImageView.loadImage(imageUrl: String) {
+    Glide.with(this.context).load(imageUrl).into(this)
 }
 
 fun View.visible() {

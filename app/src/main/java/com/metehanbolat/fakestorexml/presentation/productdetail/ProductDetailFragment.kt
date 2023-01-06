@@ -1,34 +1,26 @@
 package com.metehanbolat.fakestorexml.presentation.productdetail
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.metehanbolat.fakestorexml.MainUIState
+import com.metehanbolat.fakestorexml.R
 import com.metehanbolat.fakestorexml.databinding.FragmentProductDetailBinding
+import com.metehanbolat.fakestorexml.util.gone
+import com.metehanbolat.fakestorexml.util.inflate
+import com.metehanbolat.fakestorexml.util.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProductDetailFragment: Fragment() {
-
-    private var _binding: FragmentProductDetailBinding? = null
-    private val binding get() = _binding!!
+class ProductDetailFragment : Fragment(R.layout.fragment_product_detail) {
 
     private val args: ProductDetailFragmentArgs by navArgs()
     private val viewModel: ProductDetailViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProductDetailBinding.inflate(inflater, container, false)
-
-        return binding.root
-    }
+    private val binding by inflate(FragmentProductDetailBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,24 +28,25 @@ class ProductDetailFragment: Fragment() {
         viewModel.getProductFromId(args.id)
 
         viewModel.productState.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is MainUIState.Loading -> {
-                    println("productState: Loading")
+                    binding.loadingLottie.visible()
                 }
                 is MainUIState.Error -> {
+                    binding.loadingLottie.gone()
                     println("productState: Error")
                 }
                 is MainUIState.Success -> {
-                    println("productState: Success: ${it.data}")
+                    val product = it.data
+                    binding.productImageCard.visible()
+                    binding.loadingLottie.gone()
+                    Glide.with(requireContext()).load(product.image).into(binding.productImage)
+                    binding.productName.text = product.title
+                    binding.productDetail.text = product.description
+                    binding.productPriceText.text = "${product.price.toString()} ₺"
                 }
             }
         }
-
-
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

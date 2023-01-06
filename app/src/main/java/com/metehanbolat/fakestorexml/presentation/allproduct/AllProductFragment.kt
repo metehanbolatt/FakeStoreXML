@@ -1,9 +1,7 @@
 package com.metehanbolat.fakestorexml.presentation.allproduct
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,6 +15,7 @@ import com.metehanbolat.fakestorexml.connectivity.NetworkConnectivityObserver
 import com.metehanbolat.fakestorexml.databinding.FragmentAllProductBinding
 import com.metehanbolat.fakestorexml.presentation.MainViewModel
 import com.metehanbolat.fakestorexml.util.gone
+import com.metehanbolat.fakestorexml.util.inflate
 import com.metehanbolat.fakestorexml.util.observeTextChanges
 import com.metehanbolat.fakestorexml.util.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,26 +26,18 @@ import kotlinx.coroutines.flow.onEach
 
 @FlowPreview
 @AndroidEntryPoint
-class AllProductFragment : Fragment() {
-
-    private var _binding: FragmentAllProductBinding? = null
-    private val binding get() = _binding!!
+class AllProductFragment : Fragment(R.layout.fragment_all_product) {
 
     private val viewModel: AllProductViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
 
+    private val binding by inflate(FragmentAllProductBinding::bind)
+
     private lateinit var connectivityObserver: ConnectivityObserver
-    private lateinit var allProductAdapter: AllProductAdapter
+    private val allProductAdapter = AllProductAdapter()
 
     private var isNetworkAvailable = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAllProductBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -90,7 +81,8 @@ class AllProductFragment : Fragment() {
                     }
                     is MainUIState.Success -> {
                         contentVisible(isContentVisible = true)
-                        allProductAdapter = AllProductAdapter(it.data) { id ->
+                        allProductAdapter.updateProductAdapter(it.data)
+                        allProductAdapter.setOnItemClickListener { id ->
                             val action =
                                 AllProductFragmentDirections.actionAllProductFragmentToProductDetailFragment(
                                     id = id
@@ -159,10 +151,5 @@ class AllProductFragment : Fragment() {
             networkErrorText.text = resources.getString(R.string.no_internet_text)
             networkErrorView.isVisible = !isConnect
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

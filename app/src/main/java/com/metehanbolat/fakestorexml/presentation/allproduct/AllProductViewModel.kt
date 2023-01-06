@@ -1,6 +1,9 @@
 package com.metehanbolat.fakestorexml.presentation.allproduct
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.mapper.ProductListMapper
 import com.metehanbolat.domain.model.ProductDbModel
@@ -41,7 +44,11 @@ class AllProductViewModel @Inject constructor(
                 .collect { response ->
                     when (response) {
                         NetworkResponse.Loading -> _productUIDataState.postValue(MainUIState.Loading)
-                        is NetworkResponse.Error -> _productUIDataState.postValue(MainUIState.Error(R.string.error))
+                        is NetworkResponse.Error -> _productUIDataState.postValue(
+                            MainUIState.Error(
+                                R.string.error
+                            )
+                        )
                         is NetworkResponse.Success -> {
                             response.result.forEach {
                                 addProductsToDatabase(
@@ -71,7 +78,11 @@ class AllProductViewModel @Inject constructor(
                 .collect { response ->
                     when (response) {
                         NetworkResponse.Loading -> _productUIDataState.postValue(MainUIState.Loading)
-                        is NetworkResponse.Error -> _productUIDataState.postValue(MainUIState.Error(R.string.error))
+                        is NetworkResponse.Error -> _productUIDataState.postValue(
+                            MainUIState.Error(
+                                R.string.error
+                            )
+                        )
                         is NetworkResponse.Success -> _productUIDataState.postValue(
                             MainUIState.Success(
                                 productsMapper.map(response.result)
