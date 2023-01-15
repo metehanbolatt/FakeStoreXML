@@ -11,6 +11,7 @@ buildscript {
         nav_version = '2.5.3'
         glide_version = '4.14.2'
         lottie_version = '4.2.0'
+        data_store_version = '1.0.0'
 
         // Test
         junit_version = '4.13.2'
