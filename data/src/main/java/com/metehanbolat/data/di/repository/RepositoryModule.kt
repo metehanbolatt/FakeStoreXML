@@ -1,6 +1,8 @@
 package com.metehanbolat.data.di.repository
 
+import com.metehanbolat.data.repository.DataStoreRepositoryImpl
 import com.metehanbolat.data.repository.FakeStoreRepositoryImpl
+import com.metehanbolat.domain.repository.DataStoreRepository
 import com.metehanbolat.domain.repository.FakeStoreRepository
 import dagger.Binds
 import dagger.Module
@@ -15,4 +17,8 @@ abstract class RepositoryModule {
     @Binds
     @ViewModelScoped
     abstract fun bindFakeStoreRepository(fakeStoreRepositoryImpl: FakeStoreRepositoryImpl): FakeStoreRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindTimeDataStoreRepository(dataStoreRepositoryImpl: DataStoreRepositoryImpl): DataStoreRepository
 }

@@ -1,13 +1,11 @@
 package com.metehanbolat.fakestorexml.presentation.allproduct
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.mapper.ProductListMapper
 import com.metehanbolat.domain.model.ProductDbModel
 import com.metehanbolat.domain.model.ProductItem
+import com.metehanbolat.domain.repository.DataStoreRepository
 import com.metehanbolat.domain.usecase.addproducttodatabaseusecase.AddProductToDatabaseUseCase
 import com.metehanbolat.domain.usecase.getallproductsusecase.GetAllProductsUseCase
 import com.metehanbolat.domain.usecase.getlimitedproductsusecase.GetLimitedProductsUseCase
@@ -27,7 +25,8 @@ class AllProductViewModel @Inject constructor(
     private val getLimitedProductsUseCase: GetLimitedProductsUseCase,
     private val readAllProductFromDatabaseUseCase: ReadAllProductFromDatabaseUseCase,
     private val addProductToDatabaseUseCase: AddProductToDatabaseUseCase,
-    private val productsMapper: ProductListMapper<ProductItem, ProductUIData>
+    private val productsMapper: ProductListMapper<ProductItem, ProductUIData>,
+    private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
 
     private val _productUIDataState = MutableLiveData<MainUIState<List<ProductUIData>>>()
@@ -35,6 +34,14 @@ class AllProductViewModel @Inject constructor(
 
     private val _productListFromDatabase = MutableLiveData<List<ProductDbModel>>()
     val productListFromDatabase: LiveData<List<ProductDbModel>> get() = _productListFromDatabase
+
+    val readFromDataStore = dataStoreRepository.readFromDataStore.asLiveData()
+
+    fun saveToDataStore(serviceCallTime: String) {
+        viewModelScope.launch {
+            dataStoreRepository.saveToDataStore(serviceCallTime = serviceCallTime)
+        }
+    }
 
     fun getAllProducts() {
         viewModelScope.launch {

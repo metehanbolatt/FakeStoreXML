@@ -11,11 +11,11 @@ class MainViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _networkConnectivity = MutableLiveData(false)
+    private val _networkConnectivity = MutableLiveData<Boolean>()
     val networkConnectivity: LiveData<Boolean> = _networkConnectivity
 
     fun setNetworkConnectivity(networkConnectivity: Boolean) {
-        _networkConnectivity.postValue(networkConnectivity)
+        _networkConnectivity.value = networkConnectivity
     }
 
 }

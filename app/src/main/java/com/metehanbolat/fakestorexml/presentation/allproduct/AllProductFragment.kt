@@ -9,9 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.metehanbolat.fakestorexml.MainUIState
+import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.R
-import com.metehanbolat.fakestorexml.connectivity.ConnectivityObserver
-import com.metehanbolat.fakestorexml.connectivity.NetworkConnectivityObserver
+import com.metehanbolat.fakestorexml.connectivity.NetworkConnectivityLD
+import com.metehanbolat.fakestorexml.connectivity.Status
 import com.metehanbolat.fakestorexml.databinding.FragmentAllProductBinding
 import com.metehanbolat.fakestorexml.presentation.MainViewModel
 import com.metehanbolat.fakestorexml.util.gone
@@ -23,6 +24,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 @FlowPreview
 @AndroidEntryPoint
@@ -33,10 +35,13 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
 
     private val binding by inflate(FragmentAllProductBinding::bind)
 
-    private lateinit var connectivityObserver: ConnectivityObserver
-    private val allProductAdapter = AllProductAdapter()
+    private val allProductAdapter by lazy { AllProductAdapter() }
+
+    @Inject
+    lateinit var connectivityObserver: NetworkConnectivityLD
 
     private var isNetworkAvailable = false
+    var a = 0
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,22 +50,17 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
         bindViewModel()
         bindUI()
 
+        viewModel.readFromDataStore.observe(viewLifecycleOwner) {
+            println("Kayıtlı data: $it")
+        }
+
         binding.roomTestButton.setOnLongClickListener {
             viewModel.readAllProductFromDatabase()
             true
         }
 
         binding.roomTestButton.setOnClickListener {
-            /*
-            viewModel.addProductsToDatabase(
-                ProductDbModel(
-                    id = Random.nextInt(),
-                    productName = "Skirt",
-                    productImageUrl = "Dummy Url"
-                )
-            )
 
-             */
         }
 
         viewModel.productListFromDatabase.observe(viewLifecycleOwner) {
@@ -75,17 +75,24 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
                 when (it) {
                     is MainUIState.Loading -> {
                         contentVisible(isContentVisible = false)
+                        println("loading")
                     }
                     is MainUIState.Error -> {
                         serviceError()
+                        println("Error")
                     }
                     is MainUIState.Success -> {
                         contentVisible(isContentVisible = true)
-                        allProductAdapter.updateProductAdapter(it.data)
-                        allProductAdapter.setOnItemClickListener { id ->
+                        println("size: " + it.data.size)
+                        val data = mutableListOf<ProductUIData>()
+                        (0..100).forEach { a ->
+                            data += it.data
+                        }
+                        allProductAdapter.submitList(data)
+                        allProductAdapter.setOnItemClickListener { productUIData ->
                             val action =
                                 AllProductFragmentDirections.actionAllProductFragmentToProductDetailFragment(
-                                    id = id
+                                    id = productUIData.id
                                 )
                             findNavController().navigate(action)
                         }
@@ -95,23 +102,31 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
             }
         }
         mainViewModel.networkConnectivity.observe(viewLifecycleOwner) {
+            println("connect: $it")
             isConnectToInternet(it)
         }
     }
 
     private fun bindUI() {
-        connectivityObserver = NetworkConnectivityObserver(requireContext())
-        connectivityObserver.observe().onEach { networkStatus ->
-            when (networkStatus) {
-                ConnectivityObserver.Status.Available -> {
-                    mainViewModel.setNetworkConnectivity(networkConnectivity = true)
-                    observeSearchTextChanges()
-                }
-                else -> {
-                    mainViewModel.setNetworkConnectivity(networkConnectivity = false)
+        connectivityObserver.observe(viewLifecycleOwner) { networkStatus ->
+            networkStatus?.let {
+                when (it) {
+                    Status.Available -> {
+                        mainViewModel.setNetworkConnectivity(networkConnectivity = true)
+                        println("Available")
+                        observeSearchTextChanges()
+                    }
+                    Status.Unavailable -> {
+                        println("Unavailable")
+                        mainViewModel.setNetworkConnectivity(networkConnectivity = false)
+                    }
+                    Status.Lost -> {
+                        println("Lost")
+                        mainViewModel.setNetworkConnectivity(networkConnectivity = false)
+                    }
                 }
             }
-        }.launchIn(lifecycleScope)
+        }
     }
 
     private fun observeSearchTextChanges() {
