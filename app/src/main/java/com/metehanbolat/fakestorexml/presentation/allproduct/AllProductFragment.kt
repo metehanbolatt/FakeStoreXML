@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.metehanbolat.fakestorexml.MainUIState
-import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.R
 import com.metehanbolat.fakestorexml.connectivity.NetworkConnectivityLD
 import com.metehanbolat.fakestorexml.connectivity.Status
@@ -24,6 +23,8 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @FlowPreview
@@ -41,8 +42,6 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
     lateinit var connectivityObserver: NetworkConnectivityLD
 
     private var isNetworkAvailable = false
-    var a = 0
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,20 +50,12 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
         bindUI()
 
         viewModel.readFromDataStore.observe(viewLifecycleOwner) {
-            println("Kayıtlı data: $it")
-        }
-
-        binding.roomTestButton.setOnLongClickListener {
-            viewModel.readAllProductFromDatabase()
-            true
-        }
-
-        binding.roomTestButton.setOnClickListener {
-
+            println("Saat: $it")
+            println("Güncel: ${getLocalCurrentTime()}")
         }
 
         viewModel.productListFromDatabase.observe(viewLifecycleOwner) {
-            println("Observe productListFromDatabase: $it")
+
         }
 
     }
@@ -75,20 +66,13 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
                 when (it) {
                     is MainUIState.Loading -> {
                         contentVisible(isContentVisible = false)
-                        println("loading")
                     }
                     is MainUIState.Error -> {
                         serviceError()
-                        println("Error")
                     }
                     is MainUIState.Success -> {
                         contentVisible(isContentVisible = true)
-                        println("size: " + it.data.size)
-                        val data = mutableListOf<ProductUIData>()
-                        (0..100).forEach { a ->
-                            data += it.data
-                        }
-                        allProductAdapter.submitList(data)
+                        allProductAdapter.submitList(it.data)
                         allProductAdapter.setOnItemClickListener { productUIData ->
                             val action =
                                 AllProductFragmentDirections.actionAllProductFragmentToProductDetailFragment(
@@ -102,7 +86,6 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
             }
         }
         mainViewModel.networkConnectivity.observe(viewLifecycleOwner) {
-            println("connect: $it")
             isConnectToInternet(it)
         }
     }
@@ -113,19 +96,23 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
                 when (it) {
                     Status.Available -> {
                         mainViewModel.setNetworkConnectivity(networkConnectivity = true)
-                        println("Available")
                         observeSearchTextChanges()
                     }
                     Status.Unavailable -> {
-                        println("Unavailable")
                         mainViewModel.setNetworkConnectivity(networkConnectivity = false)
                     }
                     Status.Lost -> {
-                        println("Lost")
                         mainViewModel.setNetworkConnectivity(networkConnectivity = false)
                     }
                 }
             }
+        }
+
+        binding.refreshButton.setOnClickListener {
+            allProductAdapter.clearList()
+            viewModel.getAllProducts()
+            val formatter = DateTimeFormatter.ofPattern("HH:mm")
+            viewModel.saveToDataStore(LocalDateTime.now().format(formatter))
         }
     }
 
@@ -166,5 +153,10 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
             networkErrorText.text = resources.getString(R.string.no_internet_text)
             networkErrorView.isVisible = !isConnect
         }
+    }
+
+    private fun getLocalCurrentTime(): String {
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+        return LocalDateTime.now().format(formatter)
     }
 }
