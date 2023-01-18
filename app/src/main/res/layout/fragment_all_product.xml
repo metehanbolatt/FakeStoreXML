@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        app:endIconDrawable="@drawable/ic_refresh"
         android:layout_marginEnd="20dp"
         android:hint="@string/limited_product"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,15 +27,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/room_test_button"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/refreshButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="10dp"
-        android:text="R"
-        app:layout_constraintTop_toTopOf="@id/search_input_layout"
+        android:src="@drawable/ic_refresh"
+        android:contentDescription="@string/refresh_button"
         app:layout_constraintBottom_toBottomOf="@id/search_input_layout"
-        app:layout_constraintEnd_toEndOf="@id/search_input_layout" />
+        app:layout_constraintEnd_toEndOf="@id/search_input_layout"
+        app:layout_constraintTop_toTopOf="@id/search_input_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -89,6 +91,5 @@
             android:textSize="18sp" />
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

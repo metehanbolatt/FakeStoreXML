@@ -47,6 +47,10 @@ abstract class BaseAdapter<T : Any>(
     open fun setOnItemClickListener(listener: OnItemClickListener<T>) {
         callback = listener
     }
+
+    fun clearList() {
+        submitList(arrayListOf())
+    }
 }
 
 typealias OnItemClickListener<T> = (data: T) -> Unit

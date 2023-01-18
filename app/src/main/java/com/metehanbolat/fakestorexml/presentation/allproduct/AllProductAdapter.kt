@@ -21,4 +21,5 @@ class AllProductAdapter : BaseAdapter<ProductUIData>(R.layout.all_product_item) 
             itemImage.loadImage(item.imageUrl)
         }
     }
+
 }
