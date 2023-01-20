@@ -1,4 +1,4 @@
-package com.metehanbolat.domain.usecase.readallproductfromdatabaseusecase
+package com.metehanbolat.domain.usecase.database.readallproductfromdatabaseusecase
 
 import com.metehanbolat.domain.model.ProductDbModel
 import com.metehanbolat.domain.repository.FakeStoreRepository

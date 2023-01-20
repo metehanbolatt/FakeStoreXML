@@ -1,15 +1,20 @@
 package com.metehanbolat.fakestorexml.presentation.allproduct
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.mapper.ProductListMapper
 import com.metehanbolat.domain.model.ProductDbModel
 import com.metehanbolat.domain.model.ProductItem
-import com.metehanbolat.domain.repository.DataStoreRepository
-import com.metehanbolat.domain.usecase.addproducttodatabaseusecase.AddProductToDatabaseUseCase
-import com.metehanbolat.domain.usecase.getallproductsusecase.GetAllProductsUseCase
-import com.metehanbolat.domain.usecase.getlimitedproductsusecase.GetLimitedProductsUseCase
-import com.metehanbolat.domain.usecase.readallproductfromdatabaseusecase.ReadAllProductFromDatabaseUseCase
+import com.metehanbolat.domain.usecase.database.addproducttodatabaseusecase.AddProductToDatabaseUseCase
+import com.metehanbolat.domain.usecase.database.readallproductfromdatabaseusecase.ReadAllProductFromDatabaseUseCase
+import com.metehanbolat.domain.usecase.datastore.readfromdatastore.ReadServiceCallTimeFromDataStoreUseCase
+import com.metehanbolat.domain.usecase.datastore.savetodatastoreusecase.SaveServiceCallTimeToDataStoreUseCase
+import com.metehanbolat.domain.usecase.network.getallproductsusecase.GetAllProductsUseCase
+import com.metehanbolat.domain.usecase.network.getlimitedproductsusecase.GetLimitedProductsUseCase
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.ProductUIData
 import com.metehanbolat.fakestorexml.R
@@ -26,7 +31,8 @@ class AllProductViewModel @Inject constructor(
     private val readAllProductFromDatabaseUseCase: ReadAllProductFromDatabaseUseCase,
     private val addProductToDatabaseUseCase: AddProductToDatabaseUseCase,
     private val productsMapper: ProductListMapper<ProductItem, ProductUIData>,
-    private val dataStoreRepository: DataStoreRepository
+    private val saveServiceCallTimeToDataStoreUseCase: SaveServiceCallTimeToDataStoreUseCase,
+    readServiceCallTimeToDataStoreUseCase: ReadServiceCallTimeFromDataStoreUseCase
 ) : ViewModel() {
 
     private val _productUIDataState = MutableLiveData<MainUIState<List<ProductUIData>>>()
@@ -35,11 +41,11 @@ class AllProductViewModel @Inject constructor(
     private val _productListFromDatabase = MutableLiveData<List<ProductDbModel>>()
     val productListFromDatabase: LiveData<List<ProductDbModel>> get() = _productListFromDatabase
 
-    val readFromDataStore = dataStoreRepository.readFromDataStore.asLiveData()
+    val readFromDataStore = readServiceCallTimeToDataStoreUseCase().asLiveData()
 
     fun saveToDataStore(serviceCallTime: String) {
         viewModelScope.launch {
-            dataStoreRepository.saveToDataStore(serviceCallTime = serviceCallTime)
+            saveServiceCallTimeToDataStoreUseCase(serviceCallTime = serviceCallTime)
         }
     }
 
@@ -56,6 +62,7 @@ class AllProductViewModel @Inject constructor(
                                 R.string.error
                             )
                         )
+
                         is NetworkResponse.Success -> {
                             response.result.forEach {
                                 addProductsToDatabase(

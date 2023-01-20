@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.model.ProductItem
-import com.metehanbolat.domain.usecase.getproductfromid.GetProductFromIdUseCase
+import com.metehanbolat.domain.usecase.network.getproductfromid.GetProductFromIdUseCase
 import com.metehanbolat.fakestorexml.MainUIState
 import com.metehanbolat.fakestorexml.R
 import dagger.hilt.android.lifecycle.HiltViewModel

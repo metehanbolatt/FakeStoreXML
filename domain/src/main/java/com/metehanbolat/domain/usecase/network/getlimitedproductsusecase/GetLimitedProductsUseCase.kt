@@ -1,4 +1,4 @@
-package com.metehanbolat.domain.usecase.getlimitedproductsusecase
+package com.metehanbolat.domain.usecase.network.getlimitedproductsusecase
 
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.model.ProductItem

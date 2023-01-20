@@ -50,8 +50,7 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
         bindUI()
 
         viewModel.readFromDataStore.observe(viewLifecycleOwner) {
-            println("Saat: $it")
-            println("Güncel: ${getLocalCurrentTime()}")
+
         }
 
         viewModel.productListFromDatabase.observe(viewLifecycleOwner) {

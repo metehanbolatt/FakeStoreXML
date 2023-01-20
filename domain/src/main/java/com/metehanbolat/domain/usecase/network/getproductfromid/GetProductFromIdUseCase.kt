@@ -1,4 +1,4 @@
-package com.metehanbolat.domain.usecase.getproductfromid
+package com.metehanbolat.domain.usecase.network.getproductfromid
 
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.model.ProductItem

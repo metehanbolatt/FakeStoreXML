@@ -1,4 +1,4 @@
-package com.metehanbolat.domain.usecase.getallproductsusecase
+package com.metehanbolat.domain.usecase.network.getlimitedproductsusecase
 
 import com.metehanbolat.domain.common.NetworkResponse
 import com.metehanbolat.domain.model.ProductItem
@@ -7,14 +7,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetAllProductsUseCaseImpl @Inject constructor(
+class GetLimitedProductsUseCaseImpl @Inject constructor(
     private val fakeStoreRepository: FakeStoreRepository
-) : GetAllProductsUseCase {
+) : GetLimitedProductsUseCase {
 
-    override fun invoke(): Flow<NetworkResponse<List<ProductItem>>> =
+    override fun invoke(limit: String): Flow<NetworkResponse<List<ProductItem>>> =
         flow {
             emit(NetworkResponse.Loading)
-            emit(fakeStoreRepository.getAllProducts())
+            emit(fakeStoreRepository.getLimitedProducts(limit = limit))
         }
-
 }

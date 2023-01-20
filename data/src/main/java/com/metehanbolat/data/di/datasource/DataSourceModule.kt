@@ -1,5 +1,7 @@
 package com.metehanbolat.data.di.datasource
 
+import com.metehanbolat.data.source.datastore.TimeDataStoreDataSource
+import com.metehanbolat.data.source.datastore.TimeDataStoreDataSourceImpl
 import com.metehanbolat.data.source.local.LocalDataSource
 import com.metehanbolat.data.source.local.LocalDataSourceImpl
 import com.metehanbolat.data.source.remote.RemoteDataSource
@@ -21,4 +23,9 @@ abstract class DataSourceModule {
     @Binds
     @ViewModelScoped
     abstract fun bindLocalDataSource(localDataSourceImpl: LocalDataSourceImpl): LocalDataSource
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindDataStoreDataSource(timeDataStoreDataSourceImpl: TimeDataStoreDataSourceImpl): TimeDataStoreDataSource
+
 }

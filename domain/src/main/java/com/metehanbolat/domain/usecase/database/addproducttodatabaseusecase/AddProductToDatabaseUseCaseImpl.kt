@@ -1,4 +1,4 @@
-package com.metehanbolat.domain.usecase.addproducttodatabaseusecase
+package com.metehanbolat.domain.usecase.database.addproducttodatabaseusecase
 
 import com.metehanbolat.domain.model.ProductDbModel
 import com.metehanbolat.domain.repository.FakeStoreRepository

@@ -1,7 +1,6 @@
 package com.metehanbolat.data.repository
 
 import com.metehanbolat.data.di.coroutine.IoDispatcher
-import com.metehanbolat.data.di.coroutine.MainDispatcher
 import com.metehanbolat.data.source.local.LocalDataSource
 import com.metehanbolat.data.source.remote.RemoteDataSource
 import com.metehanbolat.domain.common.NetworkResponse
@@ -16,8 +15,7 @@ import javax.inject.Inject
 class FakeStoreRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : FakeStoreRepository {
 
     override suspend fun getAllProducts(): NetworkResponse<List<ProductItem>> =
@@ -46,7 +44,6 @@ class FakeStoreRepositoryImpl @Inject constructor(
                 NetworkResponse.Error(exception = e)
             }
         }
-
 
     override fun readAllData(): Flow<List<ProductDbModel>> = localDataSource.readAllData()
 
