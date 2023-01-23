@@ -57,6 +57,8 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
 
         }
 
+
+
     }
 
     private fun bindViewModel() {
