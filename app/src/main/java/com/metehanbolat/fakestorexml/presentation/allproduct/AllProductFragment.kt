@@ -49,9 +49,7 @@ class AllProductFragment : Fragment(R.layout.fragment_all_product) {
         bindViewModel()
         bindUI()
 
-        viewModel.readFromDataStore.observe(viewLifecycleOwner) {
 
-        }
 
         viewModel.productListFromDatabase.observe(viewLifecycleOwner) {
 
